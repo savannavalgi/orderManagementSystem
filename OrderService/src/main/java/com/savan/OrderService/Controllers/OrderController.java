@@ -8,35 +8,30 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.savan.OrderService.Model.Order;
+import com.savan.OrderService.Model.Quote;
 
 @RestController
 public class OrderController {
 	
-	@PostMapping("/order/{customerId}/{orderId}/{productId}")
-	String placeOrder(@PathVariable("customerId") String customerId,@PathVariable("orderId") String orderId,@PathVariable("productId") String productId) {
+	@PostMapping("/order/")
+	List<Order> placeOrder(@RequestBody Order o) {
+		
+		// hardcoded, later change it to enhance it.
 		List<Order> repo = new ArrayList<>();
-		System.out.println("==============savan============ customerId "+customerId+" orderId "+orderId+" productId "+productId);
-		
-		
-		RestTemplate restTemplate = new RestTemplate();
-		
-		final String baseUrl = "http://localhost:8081/ProductDetails/"+productId;
-		URI uri;
-		try {
-			uri = new URI(baseUrl);
-			ResponseEntity<Integer> result = restTemplate.getForEntity(uri, Integer.class);
-			System.out.println("==============savan============"+result.getBody());
-			repo.add(new Order(orderId,customerId,productId,result.getBody()));
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+			
 		 
 		
-		
-		return repo.toString();
+		o.setOrderId("very good id"); // generate by db
+		repo.add(o);
+		Order o2 = new Order();
+		o2.setOrderId("second iteam");
+		repo.add(o2);
+		return repo;
 	}
 }

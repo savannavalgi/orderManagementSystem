@@ -3,22 +3,32 @@ package com.savan.OrderService.Model;
 public class Order {
 	String orderId;
 	String customerId;
-	String productId;
-	int price;
-	
-
-	@Override
-	public String toString() {
-		return String.format("Order [orderId=%s, customerId=%s, productId=%s, price=%s]", orderId, customerId,
-				productId, price);
+	Quote quote;
+	boolean paymentSuccess;
+	public String getOrderId() {
+		return orderId;
 	}
-	
-	public Order(String orderId, String customerId, String productId, int price) {
-		super();
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
-		this.customerId = customerId;
-		this.productId = productId;
-		this.price = price;
 	}
+	public String getCustomerId() {
+		return customerId;
+	}
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+	public Quote getQuote() {
+		return quote;
+	}
+	public void setQuote(Quote quote) {
+		this.quote = quote;
+	}
+	public boolean isPaymentSuccess() {
+		return paymentSuccess;
+	}
+	public void setPaymentSuccess(boolean paymentSuccess) {
+		this.paymentSuccess = paymentSuccess;
+	}
+	
 	
 }
