@@ -5,6 +5,9 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,24 +17,35 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.savan.OrderService.Model.Order;
+import com.savan.OrderService.Model.Payment;
 import com.savan.OrderService.Model.Quote;
+import com.savan.OrderService.Repository.OrderRepository;
+import com.savan.OrderService.Repository.QuoteRepository;
 
 @RestController
 public class OrderController {
 	
-	@PostMapping("/order/")
-	List<Order> placeOrder(@RequestBody Order o) {
+	@Autowired
+	OrderRepository orderRepo;
+	
+	@Autowired
+	QuoteRepository quoteRepo;
+	
+	
+	@PostMapping("/order/customerId/{customerId}")
+	Payment placeOrder(@RequestBody Quote obj, @PathVariable("customerId") Long customerId) {
 		
-		// hardcoded, later change it to enhance it.
-		List<Order> repo = new ArrayList<>();
-			
-		 
 		
-		o.setOrderId("very good id"); // generate by db
-		repo.add(o);
-		Order o2 = new Order();
-		o2.setOrderId("second iteam");
-		repo.add(o2);
-		return repo;
+		String paymentLink = "www.paymentlink.com";
+		
+		
+		Long quoteId = quoteRepo.save(obj).getQuoteId();
+		Order toAdd = new Order(customerId,quoteId);
+		Long orderId = orderRepo.save(toAdd).getOrderId();
+		Payment response = new Payment(orderId,paymentLink, obj.getTotalQuotePrice());
+		
+		
+		return response;
+//		return new Payment(0001l, "some", 100);
 	}
 }

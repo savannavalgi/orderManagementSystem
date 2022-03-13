@@ -1,8 +1,9 @@
-package com.savan.ProductDetailsService.Models;
+package com.savan.QuoteService.Models;
 
 public class Quote {
+	Long quoteId;
 	String productId;
-	String countryId;
+	String country;
 	float ProductPrice;
 	String currency;
 	float tax;
@@ -14,26 +15,36 @@ public class Quote {
 	
 	
 	
-	public Quote(String productId, String countryId, String currency, float tax, float discount, String port) {
+	public Quote(String productId, String country, String currency, float tax, float discount, String port) {
 		super();
 		this.productId = productId;
-		this.countryId = countryId;
+		this.country = country;
 		this.currency = currency;
 		this.tax = tax;
 		this.discount = discount;
 		this.port = port;
 	}
+	
+
+	public Long getQuoteId() {
+		return quoteId;
+	}
+
+	public void setQuoteId(Long quoteId) {
+		this.quoteId = quoteId;
+	}
+	
 	public String getProductId() {
 		return productId;
 	}
 	public void setProductId(String productId) {
 		this.productId = productId;
 	}
-	public String getCountryId() {
-		return countryId;
+	public String getCountry() {
+		return country;
 	}
-	public void setCountryId(String countryId) {
-		this.countryId = countryId;
+	public void setCountry(String country) {
+		this.country = country;
 	}
 	public float getProductPrice() {
 		return ProductPrice;

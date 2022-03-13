@@ -1,27 +1,49 @@
 package com.savan.OrderService.Model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "orderInformation")
 public class Order {
-	String orderId;
-	String customerId;
-	Quote quote;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	Long orderId;
+	Long customerId;
+	Long quoteId;
 	boolean paymentSuccess;
-	public String getOrderId() {
+	
+	public Order() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Order(Long customerId, Long quoteId) {
+		super();
+		this.customerId = customerId;
+		this.quoteId = quoteId;
+	}
+	public Long getOrderId() {
 		return orderId;
 	}
-	public void setOrderId(String orderId) {
+	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
 	}
-	public String getCustomerId() {
+	public Long getCustomerId() {
 		return customerId;
 	}
-	public void setCustomerId(String customerId) {
+	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
-	public Quote getQuote() {
-		return quote;
+	public Long getQuoteId() {
+		return quoteId;
 	}
-	public void setQuote(Quote quote) {
-		this.quote = quote;
+	public void setQuoteId(Long quoteId) {
+		this.quoteId = quoteId;
 	}
 	public boolean isPaymentSuccess() {
 		return paymentSuccess;
