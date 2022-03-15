@@ -33,19 +33,18 @@ public class OrderController {
 	
 	
 	@PostMapping("/order/customerId/{customerId}")
-	Payment placeOrder(@RequestBody Quote obj, @PathVariable("customerId") Long customerId) {
+	Payment placeOrder(@RequestBody Quote quote, @PathVariable("customerId") Long customerId) {
 		
-		
+		// currently hard coded, can be enhanced.
 		String paymentLink = "www.paymentlink.com";
 		
 		
-		Long quoteId = quoteRepo.save(obj).getQuoteId();
-		Order toAdd = new Order(customerId,quoteId);
-		Long orderId = orderRepo.save(toAdd).getOrderId();
-		Payment response = new Payment(orderId,paymentLink, obj.getTotalQuotePrice());
+		Long quoteId = quoteRepo.save(quote).getQuoteId();
+		Order order = new Order(customerId,quoteId);
+		Long orderId = orderRepo.save(order).getOrderId();
+		Payment payment = new Payment(orderId,paymentLink, quote.getTotalQuotePrice());
 		
 		
-		return response;
-//		return new Payment(0001l, "some", 100);
+		return payment;
 	}
 }
