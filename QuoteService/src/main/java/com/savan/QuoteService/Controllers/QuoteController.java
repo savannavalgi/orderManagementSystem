@@ -6,19 +6,17 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.savan.QuoteService.Models.Product;
 import com.savan.QuoteService.Models.Quote;
 import com.savan.QuoteService.Repository.ProductRepository;
 
-import io.github.resilience4j.bulkhead.annotation.Bulkhead;
-import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
-import io.github.resilience4j.retry.annotation.Retry;
 
 @RestController
 public class QuoteController {
@@ -28,12 +26,9 @@ public class QuoteController {
 	@Autowired
 	ProductRepository productRepo;
 	
-	@GetMapping("quote/productId/{productId}/country/{country}")
-//	@Retry(name = "default", fallbackMethod="hardcoded")
-//	@CircuitBreaker(name = "default", fallbackMethod="hardcoded")
-//	@RateLimiter(name ="default")
-//	@Bulkhead(name="default")
-	Quote getPrice(@PathVariable("productId") String productId, @PathVariable("country") String country) throws Exception {
+	@GetMapping("quote/productId/{productId}")
+	ResponseEntity getPrice(@PathVariable("productId") String productId, 
+			@RequestParam("country") String country){
 		
 		// these values are currently hard coded. can be enhanced. 
 		float discount = 10;
@@ -42,13 +37,14 @@ public class QuoteController {
 		countryMap.put("India","Rupees");
 		countryMap.put("US","Dollars");
 		
+		// fetch currency and port number
 		String currency = countryMap.get(country);
 		String port = env.getProperty("local.server.port");
 		
 		// get product price from the repository
 		Optional<Product> product = productRepo.findById(productId);
 		if(!product.isPresent()) {
-			throw new Exception("this product is no more available");
+			return new ResponseEntity<String>("this product is not available",HttpStatus.CONFLICT);
 		}
 		float productPrice = product.get().getProductPrice();
 		
@@ -56,15 +52,13 @@ public class QuoteController {
 		//	calculate total quote price
 		float totalQuotePrice = productPrice * (1 - (discount/100) + (tax/100));
 		
+		
 		// build the quote object
 		Quote quote = new Quote(productId, country, currency, tax, discount, port);
 		quote.setProductPrice(productPrice);
 		quote.setTotalQuotePrice(totalQuotePrice);
 						
-		return quote;
+		return new ResponseEntity<Quote>(quote,HttpStatus.OK);
 	}
 	
-//	public String hardcoded(Exception ex) {
-//		return "fall back";
-//	}
 }

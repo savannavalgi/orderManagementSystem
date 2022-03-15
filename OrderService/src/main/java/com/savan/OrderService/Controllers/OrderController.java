@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,18 +34,24 @@ public class OrderController {
 	
 	
 	@PostMapping("/order/customerId/{customerId}")
-	Payment placeOrder(@RequestBody Quote quote, @PathVariable("customerId") Long customerId) {
+	ResponseEntity placeOrder(@RequestBody Quote quote, @PathVariable("customerId") Long customerId) {
 		
 		// currently hard coded, can be enhanced.
 		String paymentLink = "www.paymentlink.com";
 		
+		try{
+			Long quoteId = quoteRepo.save(quote).getQuoteId();
+			Order order = new Order(customerId,quoteId);
+			Long orderId = orderRepo.save(order).getOrderId();
+			Payment payment = new Payment(orderId,paymentLink, quote.getTotalQuotePrice());
+			return new ResponseEntity<Payment>(payment,HttpStatus.CREATED);
+		}catch(Exception ex){
+			return new ResponseEntity("database unresponsive",HttpStatus.SERVICE_UNAVAILABLE);
+		}finally {
+			
+		}
 		
-		Long quoteId = quoteRepo.save(quote).getQuoteId();
-		Order order = new Order(customerId,quoteId);
-		Long orderId = orderRepo.save(order).getOrderId();
-		Payment payment = new Payment(orderId,paymentLink, quote.getTotalQuotePrice());
 		
 		
-		return payment;
 	}
 }

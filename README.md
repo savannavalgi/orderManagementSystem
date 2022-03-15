@@ -12,8 +12,8 @@ quote service h2 console
 		http://localhost:8765/quote-service/h2-console
 
 get price quote api
-	GET localhost:8081/quote/productId/{productId}/country/{country}
-	GET localhost:8765/quote-service/quote/productId/{productId}/country/{country}
+	GET localhost:8081/quote/productId/{productId}?country={country}
+	GET localhost:8765/quote-service/quote/productId/{productId}?country={country}
 	
 	returns object
 		quote 
