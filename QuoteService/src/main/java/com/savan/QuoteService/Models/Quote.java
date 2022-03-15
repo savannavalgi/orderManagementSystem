@@ -11,21 +11,6 @@ public class Quote {
 	float totalQuotePrice;
 	String port;
 	
-	
-	
-	
-	
-	public Quote(String productId, String country, String currency, float tax, float discount, String port) {
-		super();
-		this.productId = productId;
-		this.country = country;
-		this.currency = currency;
-		this.tax = tax;
-		this.discount = discount;
-		this.port = port;
-	}
-	
-
 	public Long getQuoteId() {
 		return quoteId;
 	}
