@@ -29,18 +29,24 @@ public class QuoteResource {
 		quote = new Quote();
 	}
 	
-	String getCurrency(){
+	void getCurrency(){
 		Map<String,String> countryMap = new HashMap<>();
 		countryMap.put("India","Rupees");
 		countryMap.put("US","Dollars");
 		
-		return countryMap.get(quote.getCountry());
+		String currency = countryMap.get(quote.getCountry());
+		quote.setCurrency(currency);
+		
+		return ;
 	}
 	
 	public Quote getQuotation(String productId, String country) throws ProductNotFoundException{
 		
 		quote.setCountry(country);
 		quote.setProductId(productId);
+		
+		//get Currency
+		getCurrency();
 		
 		// get product price from the repository
 		Optional<Product> product = productRepo.findById(quote.getProductId());
@@ -61,7 +67,9 @@ public class QuoteResource {
 	void calculateTotalPrice() {
 		// these values are currently hard coded. can be enhanced.
 		float discount = 10;
+		quote.setDiscount(discount);
 		float tax = 5;
+		quote.setTax(tax);
 		
 		float productPrice = quote.getProductPrice();
 		
