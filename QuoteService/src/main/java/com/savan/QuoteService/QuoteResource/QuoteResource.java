@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.savan.QuoteService.Exceptions.ProductNotFoundException;
+import com.savan.QuoteService.Models.CountryPrice;
 import com.savan.QuoteService.Models.Product;
 import com.savan.QuoteService.Models.Quote;
+import com.savan.QuoteService.Repository.CountryPriceRepository;
 import com.savan.QuoteService.Repository.ProductRepository;
 
 @Service
@@ -18,6 +20,8 @@ public class QuoteResource {
 	@Autowired
 	ProductRepository productRepo;
 	
+	@Autowired
+	CountryPriceRepository countryPriceRepo;
 	
 	Quote quote;
 	
@@ -25,7 +29,7 @@ public class QuoteResource {
 		return quote;
 	}
 	
-	QuoteResource(){
+	public QuoteResource(){
 		quote = new Quote();
 	}
 	
@@ -49,13 +53,13 @@ public class QuoteResource {
 		getCurrency();
 		
 		// get product price from the repository
-		Optional<Product> product = productRepo.findById(quote.getProductId());
+		Optional<CountryPrice> CountryPrice = countryPriceRepo.findByCountryAndProductId(country,productId);
 		
-		if(product.isEmpty())
+		if(CountryPrice.isEmpty())
 			throw new ProductNotFoundException("This product is not present");
 		
 		
-		float productPrice = product.get().getProductPrice();
+		float productPrice = CountryPrice.get().getPrice();
 		quote.setProductPrice(productPrice);
 		
 		//	calculate total quote price
